@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pokédex Completa - Explore todos os 1025 Pokémon de todas as 9 gerações">
+    <meta name="theme-color" content="#ef4444">
+    <title>🔴 Pokédex Completa - Todas as 9 Gerações (1025 Pokémon)</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --bg-dark: #1f2937;
+            --bg-darker: #111827;
+            --text-dark: #111827;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --border-dark: #1f2937;
+        }
+
+        html.dark {
+            --bg-light: #0f172a;
+            --bg-white: #1f2937;
+            --text-dark: #f3f4f6;
+            --text-light: #9ca3af;
+            --border: #374151;
+            --border-dark: #374151;
+        }
+
+        html {
+            font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        input, select {
+            font-family: inherit;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title {
+            flex: 1;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .header-title p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        #darkModeToggle {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: #e5e7eb;
+            font-size: 1.25rem;
+            transition: all 0.3s;
+        }
+
+        html.dark #darkModeToggle {
+            background-color: #374151;
+        }
+
+        #darkModeToggle:hover {
+            background-color: #d1d5db;
+        }
+
+        html.dark #darkModeToggle:hover {
+            background-color: #4b5563;
+        }
+
+        /* Error Alert */
+        #errorAlert {
+            background-color: #fee2e2;
+            border-left: 4px solid #ef4444;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            max-width: 1280px;
+            margin: 0 auto 1rem;
+            display: none;
+        }
+
+        html.dark #errorAlert {
+            background-color: #7f1d1d;
+        }
+
+        #errorAlert p {
+            margin: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+
+        #errorAlert .error-title {
+            font-weight: 600;
+            color: #991b1b;
+        }
+
+        html.dark #errorAlert .error-title {
+            color: #fca5a5;
+        }
+
+        #errorAlert .error-message {
+            color: #b91c1c;
+        }
+
+        html.dark #errorAlert .error-message {
+            color: #fecaca;
+        }
+
+        #retryBtn {
+            padding: 0.25rem 0.75rem;
+            background-color: #ef4444;
+            color: white;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        #retryBtn:hover {
+            background-color: #dc2626;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar Filters */
+        aside {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .filter-btn {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            background-color: #e5e7eb;
+            color: var(--text-dark);
+            border: 1px solid transparent;
+        }
+
+        html.dark .filter-btn {
+            background-color: #374151;
+            color: var(--text-dark);
+        }
+
+        .filter-btn:hover {
+            background-color: #d1d5db;
+        }
+
+        html.dark .filter-btn:hover {
+            background-color: #4b5563;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background-color: var(--bg-white);
+            color: var(--text-dark);
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #searchInput::placeholder {
+            color: var(--text-light);
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        #clearSearchBtn {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            color: var(--text-light);
+            font-size: 1.25rem;
+            padding: 0.25rem;
+            transition: color 0.3s;
+        }
+
+        #clearSearchBtn:hover {
+            color: var(--text-dark);
+        }
+
+        #clearSearchBtn.hidden {
+            display: none;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background-color: var(--bg-white);
+            color: var(--text-dark);
+            font-size: 0.875rem;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M3 4l3 3 3-3'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            padding-right: 2rem;
+        }
+
+        html.dark select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ccc' d='M3 4l3 3 3-3'/%3E%3C/svg%3E");
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #clearFiltersBtn {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            background-color: #ef4444;
+            color: white;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        #clearFiltersBtn:hover {
+            background-color: #dc2626;
+        }
+
+        #clearFiltersBtn.hidden {
+            display: none;
+        }
+
+        /* Pokemon Grid */
+        section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #statsDiv {
+            margin-bottom: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            display: none;
+        }
+
+        #statsDiv.show {
+            display: block;
+        }
+
+        #pokemonGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            #pokemonGrid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        .pokemon-card {
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            background-color: var(--bg-white);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .pokemon-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .pokemon-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pokemon-name {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .pokemon-id {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        .pokemon-image {
+            display: flex;
+            justify-content: center;
+            background-color: #f3f4f6;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            min-height: 80px;
+        }
+
+        html.dark .pokemon-image {
+            background-color: #374151;
+        }
+
+        .pokemon-image img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+        }
+
+        .pokemon-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.65rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        /* Type Colors */
+        .type-normal   { background-color: #a8a878; color: white; }
+        .type-fire     { background-color: #f08030; color: white; }
+        .type-water    { background-color: #6890f0; color: white; }
+        .type-grass    { background-color: #78c850; color: white; }
+        .type-electric { background-color: #f8d030; color: #333; }
+        .type-ice      { background-color: #98d8d8; color: #333; }
+        .type-fighting { background-color: #c03028; color: white; }
+        .type-poison   { background-color: #a040a0; color: white; }
+        .type-ground   { background-color: #e0c068; color: #333; }
+        .type-flying   { background-color: #a890f0; color: white; }
+        .type-psychic  { background-color: #f85888; color: white; }
+        .type-bug      { background-color: #a8b820; color: white; }
+        .type-rock     { background-color: #b8a038; color: white; }
+        .type-ghost    { background-color: #705898; color: white; }
+        .type-dragon   { background-color: #7038f8; color: white; }
+        .type-dark     { background-color: #705848; color: white; }
+        .type-steel    { background-color: #b8b8d0; color: #333; }
+        .type-fairy    { background-color: #ee99ac; color: white; }
+
+        /* No Results */
+        #noResults {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        #noResults.show {
+            display: flex;
+        }
+
+        .no-results-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #noResults h2 {
+            font-size: 1.125rem;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        #noResults p {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        #resetBtn {
+            padding: 0.5rem 0.75rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        #resetBtn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Modal */
+        #modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 0;
+        }
+
+        #modal.show {
+            display: flex;
+        }
+
+        @media (min-width: 640px) {
+            #modal {
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+            }
+        }
+
+        #modalContent {
+            background-color: var(--bg-white);
+            border-radius: 0 0 1rem 1rem;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 640px) {
+            #modalContent {
+                border-radius: 1rem;
+                max-width: 42rem;
+            }
+        }
+
+        #modalHeader {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            flex: 1;
+        }
+
+        #modalTitle {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        #modalId {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        #closeModalBtn {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            background: none;
+            transition: color 0.3s;
+        }
+
+        #closeModalBtn:hover {
+            color: var(--text-dark);
+        }
+
+        .modal-body {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .modal-body {
+                padding: 1.5rem;
+                gap: 1.5rem;
+            }
+        }
+
+        .modal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .modal-info {
+                flex-direction: row;
+                gap: 1.5rem;
+            }
+        }
+
+        .modal-image {
+            display: flex;
+            justify-content: center;
+        }
+
+        @media (min-width: 640px) {
+            .modal-image {
+                width: 128px;
+                flex-shrink: 0;
+            }
+        }
+
+        #modalImage {
+            width: 128px;
+            height: 128px;
+            object-fit: contain;
+        }
+
+        @media (min-width: 640px) {
+            #modalImage {
+                width: 112px;
+                height: 112px;
+            }
+        }
+
+        .modal-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .detail-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .detail-stat {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .stat-item-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Tabs */
+        .modal-tabs {
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            background: none;
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-dark);
+        }
+
+        .tab-content {
+            display: none;
+            space-y: 0.5rem;
+        }
+
+        .tab-content.show {
+            display: block;
+        }
+
+        .stats-list {
+            space-y: 0.5rem;
+        }
+
+        .stat-row {
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-row-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.75rem;
+        }
+
+        .stat-row-name {
+            font-weight: 500;
+            color: var(--text-dark);
+            text-transform: capitalize;
+        }
+
+        .stat-row-value {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .stat-bar {
+            width: 100%;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            height: 6px;
+        }
+
+        html.dark .stat-bar {
+            background-color: #374151;
+        }
+
+        .stat-bar-fill {
+            background-color: #3b82f6;
+            border-radius: 9999px;
+            height: 6px;
+            transition: width 0.3s;
+        }
+
+        .abilities-list {
+            list-style: none;
+            space-y: 0.25rem;
+        }
+
+        .ability-item {
+            font-size: 0.75rem;
+            color: var(--text-dark);
+            padding: 0.25rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-transform: capitalize;
+        }
+
+        .hidden-ability {
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            background-color: #fef3c7;
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        html.dark .hidden-ability {
+            background-color: rgba(217, 119, 6, 0.4);
+            color: #fcd34d;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .info-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 0.25rem;
+        }
+
+        .egg-groups {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            padding-top: 0.75rem;
+            margin-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .egg-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.65rem;
+            font-weight: 500;
+            background-color: #e9d5ff;
+            color: #7e22ce;
+        }
+
+        html.dark .egg-badge {
+            background-color: rgba(168, 85, 247, 0.3);
+            color: #d8b4fe;
+        }
+
+        .skeleton {
+            background-color: #e5e7eb;
+            border-radius: 0.375rem;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        html.dark .skeleton {
+            background-color: #374151;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        html.dark ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
+
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="header-content">
+        <div class="header-title">
+            <h1>Pokédex</h1>
+            <p><span id="totalPokemonCount">1025</span> Pokémon • 9 Gerações</p>
+        </div>
+        <button id="darkModeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
+    </div>
+    
+    <!-- Error Alert -->
+    <div id="errorAlert">
+        <p class="error-title">Erro ao carregar dados</p>
+        <p id="errorMessage" class="error-message"></p>
+        <button id="retryBtn" type="button">Tentar novamente</button>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main>
+    <div class="grid-container">
+        <!-- Sidebar Filters -->
+        <aside>
+            <!-- Generation Filter -->
+            <div class="filter-group">
+                <label>Geração</label>
+                <div class="button-group" id="generationFilter"></div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="filter-group">
+                <label>Buscar</label>
+                <div class="search-wrapper">
+                    <input
+                        id="searchInput"
+                        type="text"
+                        placeholder="Nome ou número..."
+                        aria-label="Search Pokemon"
+                    />
+                    <button id="clearSearchBtn" type="button" aria-label="Clear search" class="hidden">×</button>
+                </div>
+            </div>
+
+            <!-- Type Filter -->
+            <div class="filter-group">
+                <label>Tipo</label>
+                <div class="button-group" id="typeFilter"></div>
+            </div>
+
+            <!-- Sort -->
+            <div class="filter-group">
+                <label>Ordenar</label>
+                <select id="sortSelect">
+                    <option value="number-asc">Número (Crescente)</option>
+                    <option value="number-desc">Número (Decrescente)</option>
+                    <option value="name-asc">Nome (A-Z)</option>
+                    <option value="name-desc">Nome (Z-A)</option>
+                    <option value="type">Tipo (Alfabético)</option>
+                </select>
+            </div>
+
+            <!-- Clear Filters -->
+            <button id="clearFiltersBtn" type="button" class="hidden">Limpar Filtros</button>
+        </aside>
+
+        <!-- Pokemon Grid -->
+        <section>
+            <!-- Stats -->
+            <div id="statsDiv">
+                <span id="resultCount">0</span> de <span id="totalCount">0</span>
+            </div>
+
+            <!-- Pokemon Grid -->
+            <div id="pokemonGrid"></div>
+
+            <!-- No Results -->
+            <div id="noResults">
+                <div class="no-results-emoji">🔍</div>
+                <h2>Sem resultados</h2>
+                <p>Ajuste os filtros.</p>
+                <button id="resetBtn" type="button">Limpar</button>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- Modal -->
+<div id="modal">
+    <div id="modalContent">
+        <header id="modalHeader">
+            <div class="modal-title">
+                <h2 id="modalTitle">Pokémon</h2>
+                <p id="modalId">#001</p>
+            </div>
+            <button id="closeModalBtn" type="button" aria-label="Close modal">×</button>
+        </header>
+
+        <div class="modal-body">
+            <div class="modal-info">
+                <div class="modal-image">
+                    <img id="modalImage" src="" alt="Pokemon" />
+                </div>
+                <div class="modal-details">
+                    <div class="detail-group">
+                        <span class="detail-label">Tipos</span>
+                        <div id="modalTypes" class="detail-content"></div>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Fraquezas</span>
+                        <div id="modalWeaknesses" class="detail-content"></div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-item-label">Altura</div>
+                            <div id="modalHeight" class="stat-item-value">0m</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-item-label">Peso</div>
+                            <div id="modalWeight" class="stat-item-value">0kg</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-tabs">
+                <button id="tabStats" type="button" class="tab-btn active">Stats</button>
+                <button id="tabDetails" type="button" class="tab-btn">Info</button>
+            </div>
+
+            <div id="statsContent" class="tab-content show"></div>
+            <div id="detailsContent" class="tab-content"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== GERAÇÕES ==========
+    const generations = {
+        1: { name: 'Gen I',   range: [1, 151],   count: 151 },
+        2: { name: 'Gen II',  range: [152, 251], count: 100 },
+        3: { name: 'Gen III', range: [252, 386], count: 135 },
+        4: { name: 'Gen IV',  range: [387, 493], count: 107 },
+        5: { name: 'Gen V',   range: [494, 649], count: 156 },
+        6: { name: 'Gen VI',  range: [650, 721], count: 72 },
+        7: { name: 'Gen VII', range: [722, 809], count: 88 },
+        8: { name: 'Gen VIII',range: [810, 905], count: 96 },
+        9: { name: 'Gen IX',  range: [906, 1025],count: 120 },
+    };
+
+    // ========== STATE ==========
+    const state = {
+        allPokemon: [],
+        filteredPokemon: [],
+        selectedPokemon: null,
+        filters: {
+            generation: 1,
+            type: null,
+            search: '',
+            sort: 'number-asc',
+        },
+        loading: true,
+        error: null,
+        debounceTimer: null,
+        loadedGenerations: new Set(),
+        darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
+    };
+
+    const typeColors = {
+        normal:   { bg: 'bg-gray-400',   text: 'text-gray-900' },
+        fire:     { bg: 'bg-orange-500', text: 'text-white' },
+        water:    { bg: 'bg-blue-500',   text: 'text-white' },
+        grass:    { bg: 'bg-green-500',  text: 'text-white' },
+        electric: { bg: 'bg-yellow-400', text: 'text-gray-900' },
+        ice:      { bg: 'bg-cyan-400',   text: 'text-gray-900' },
+        fighting: { bg: 'bg-red-700',    text: 'text-white' },
+        poison:   { bg: 'bg-purple-600', text: 'text-white' },
+        ground:   { bg: 'bg-yellow-700', text: 'text-white' },
+        flying:   { bg: 'bg-indigo-400', text: 'text-white' },
+        psychic:  { bg: 'bg-pink-500',   text: 'text-white' },
+        bug:      { bg: 'bg-lime-500',   text: 'text-gray-900' },
+        rock:     { bg: 'bg-yellow-800', text: 'text-white' },
+        ghost:    { bg: 'bg-purple-800', text: 'text-white' },
+        dragon:   { bg: 'bg-indigo-700', text: 'text-white' },
+        dark:     { bg: 'bg-gray-800',   text: 'text-white' },
+        steel:    { bg: 'bg-slate-400',  text: 'text-gray-900' },
+        fairy:    { bg: 'bg-pink-300',   text: 'text-gray-900' },
+    };
+
+    const typeWeaknesses = {
+        normal:   ['fighting'], fire:     ['water', 'ground', 'rock'], water:    ['grass', 'electric'],
+        grass:    ['fire', 'ice', 'poison', 'flying', 'bug'], electric: ['ground'], ice:      ['fire', 'fighting', 'rock', 'steel'],
+        fighting: ['flying', 'psychic', 'fairy'], poison:   ['ground', 'psychic'], ground:   ['water', 'grass', 'ice'],
+        flying:   ['electric', 'ice', 'rock'], psychic:  ['bug', 'ghost', 'dark'], bug:      ['fire', 'flying', 'rock'],
+        rock:     ['water', 'grass', 'fighting', 'ground', 'steel'], ghost:    ['ghost', 'dark'], dragon:   ['ice', 'dragon', 'fairy'],
+        dark:     ['fighting', 'bug', 'fairy'], steel:    ['fire', 'fighting', 'ground'], fairy:    ['poison', 'steel'],
+    };
+
+    const allTypes = [
+        'normal', 'fire', 'water', 'grass', 'electric',
+        'ice', 'fighting', 'poison', 'ground', 'flying',
+        'psychic', 'bug', 'rock', 'ghost', 'dragon',
+        'dark', 'steel', 'fairy'
+    ];
+
+    // ========== CACHE ==========
+    const cache = new Map();
+    const CACHE_TTL = 3600000;
+
+    function getCached(key) {
+        const entry = cache.get(key);
+        if (!entry) return null;
+        if (Date.now() - entry.timestamp > CACHE_TTL) {
+            cache.delete(key);
+            return null;
+        }
+        return entry.data;
+    }
+
+    function setCached(key, data) {
+        cache.set(key, { data, timestamp: Date.now() });
+    }
+
+    // ========== API ==========
+    async function fetchPokemonDetails(id) {
+        const cached = getCached(`pokemon-${id}`);
+        if (cached) return cached;
+
+        await new Promise(resolve => setTimeout(resolve, 30));
+
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            
+            if (!res.ok) return null;
+            const data = await res.json();
+            setCached(`pokemon-${id}`, data);
+            return data;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async function fetchPokemonSpecies(id) {
+        const cached = getCached(`species-${id}`);
+        if (cached) return cached;
+
+        try {
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+            if (!res.ok) return null;
+            const data = await res.json();
+            setCached(`species-${id}`, data);
+            return data;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async function loadGeneration(genNumber) {
+        if (state.loadedGenerations.has(genNumber)) {
+            return state.allPokemon.filter(p => {
+                const range = generations[genNumber].range;
+                return p.id >= range[0] && p.id <= range[1];
+            });
+        }
+
+        const range = generations[genNumber].range;
+        const ids = Array.from({ length: range[1] - range[0] + 1 }, (_, i) => range[0] + i);
+        
+        try {
+            console.log(`🔄 Carregando Gen ${genNumber}...`);
+            
+            const chunkSize = 20;
+            const details = [];
+            
+            for (let i = 0; i < ids.length; i += chunkSize) {
+                const chunk = ids.slice(i, i + chunkSize);
+                const chunkDetails = await Promise.all(chunk.map(id => fetchPokemonDetails(id)));
+                details.push(...chunkDetails);
+                
+                const progress = Math.min(((i + chunkSize) / ids.length) * 100, 100);
+                console.log(`📊 Gen ${genNumber}: ${progress.toFixed(0)}%`);
+            }
+            
+            const validDetails = details.filter(p => p !== null);
+            
+            if (validDetails.length === 0) {
+                throw new Error(`Nenhum Pokémon carregado de Gen ${genNumber}`);
+            }
+            
+            state.allPokemon.push(...validDetails);
+            state.loadedGenerations.add(genNumber);
+            
+            console.log(`✅ Gen ${genNumber} carregada com ${validDetails.length} Pokémon`);
+            return validDetails;
+        } catch (err) {
+            console.error(`❌ Erro ao carregar Gen ${genNumber}:`, err);
+            throw new Error(`Erro ao carregar Gen ${genNumber}: ${err.message}`);
+        }
+    }
+
+    async function loadCurrentGeneration() {
+        state.loading = true;
+        state.error = null;
+        renderLoading();
+
+        try {
+            console.log(`🚀 Iniciando carregamento da Gen ${state.filters.generation}...`);
+            await loadGeneration(state.filters.generation);
+            renderTypeButtons();
+            applyFilters();
+            state.loading = false;
+            render();
+            console.log(`✨ Carregamento concluído!`);
+        } catch (err) {
+            state.error = err.message || 'Erro ao carregar Pokémon. Verifique sua conexão.';
+            state.loading = false;
+            console.error('Erro final:', err);
+            showError();
+        }
+    }
+
+    // ========== FILTERING & SORTING ==========
+    function applyFilters() {
+        const range = generations[state.filters.generation].range;
+        let result = state.allPokemon.filter(p => p.id >= range[0] && p.id <= range[1]);
+
+        if (state.filters.type) {
+            result = result.filter(p => 
+                p.types.some(t => t.type.name === state.filters.type)
+            );
+        }
+
+        if (state.filters.search) {
+            const q = state.filters.search.toLowerCase();
+            result = result.filter(p =>
+                p.name.toLowerCase().includes(q) || String(p.id).includes(q)
+            );
+        }
+
+        switch (state.filters.sort) {
+            case 'number-desc':
+                result.sort((a, b) => b.id - a.id);
+                break;
+            case 'name-asc':
+                result.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'name-desc':
+                result.sort((a, b) => b.name.localeCompare(a.name));
+                break;
+            case 'type':
+                result.sort((a, b) => {
+                    const at = a.types[0]?.type.name ?? '';
+                    const bt = b.types[0]?.type.name ?? '';
+                    return at.localeCompare(bt);
+                });
+                break;
+            case 'number-asc':
+            default:
+                result.sort((a, b) => a.id - b.id);
+        }
+
+        state.filteredPokemon = result;
+        render();
+    }
+
+    // ========== RENDER FUNCTIONS ==========
+    function renderLoading() {
+        const grid = document.getElementById('pokemonGrid');
+        grid.innerHTML = '';
+        for (let i = 0; i < 12; i++) {
+            const skeleton = document.createElement('div');
+            skeleton.className = 'pokemon-card';
+            skeleton.innerHTML = `
+                <div class="pokemon-card-header">
+                    <div class="skeleton" style="width: 60%; height: 1.5rem;"></div>
+                    <div class="skeleton" style="width: 2.5rem; height: 1.5rem;"></div>
+                </div>
+                <div class="skeleton pokemon-image" style="height: 5rem;"></div>
+                <div class="skeleton" style="height: 1rem; margin-bottom: 0.25rem;"></div>
+                <div class="skeleton" style="height: 1rem;"></div>
+            `;
+            grid.appendChild(skeleton);
+        }
+    }
+
+    function renderGenerationButtons() {
+        const container = document.getElementById('generationFilter');
+        container.innerHTML = '';
+
+        Object.entries(generations).forEach(([num, gen]) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `filter-btn ${state.filters.generation == num ? 'active' : ''}`;
+            btn.textContent = `${gen.name.split(' ')[1]} (${gen.count})`;
+            btn.onclick = () => {
+                state.filters.generation = parseInt(num);
+                state.filters.type = null;
+                state.filters.search = '';
+                document.getElementById('searchInput').value = '';
+                renderGenerationButtons();
+                renderTypeButtons();
+                loadCurrentGeneration();
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function renderTypeButtons() {
+        const container = document.getElementById('typeFilter');
+        container.innerHTML = '';
+
+        const allBtn = document.createElement('button');
+        allBtn.type = 'button';
+        allBtn.className = `filter-btn ${!state.filters.type ? 'active' : ''}`;
+        allBtn.textContent = 'Todos';
+        allBtn.onclick = () => { state.filters.type = null; applyFilters(); };
+        container.appendChild(allBtn);
+
+        allTypes.forEach(type => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `filter-btn ${state.filters.type === type ? 'active' : ''}`;
+            btn.textContent = type;
+            btn.onclick = () => {
+                state.filters.type = state.filters.type === type ? null : type;
+                applyFilters();
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function render() {
+        const grid = document.getElementById('pokemonGrid');
+        const stats = document.getElementById('statsDiv');
+        const noResults = document.getElementById('noResults');
+        const resultCount = document.getElementById('resultCount');
+        const totalCount = document.getElementById('totalCount');
+        const range = generations[state.filters.generation].range;
+        const genTotal = state.allPokemon.filter(p => p.id >= range[0] && p.id <= range[1]).length;
+
+        totalCount.textContent = genTotal;
+
+        if (state.filteredPokemon.length === 0) {
+            grid.innerHTML = '';
+            stats.classList.remove('show');
+            noResults.classList.add('show');
+            return;
+        }
+
+        stats.classList.add('show');
+        noResults.classList.remove('show');
+        resultCount.textContent = state.filteredPokemon.length;
+
+        grid.innerHTML = '';
+        state.filteredPokemon.forEach(pokemon => {
+            const card = createPokemonCard(pokemon);
+            grid.appendChild(card);
+        });
+    }
+
+    function createPokemonCard(pokemon) {
+        const name = pokemon.name[0].toUpperCase() + pokemon.name.slice(1);
+        const id = String(pokemon.id).padStart(4, '0');
+
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'pokemon-card';
+        
+        const typesHTML = pokemon.types.map(t => {
+            const type = t.type.name;
+            return `<span class="type-badge type-${type}">${type}</span>`;
+        }).join('');
+
+        card.innerHTML = `
+            <div class="pokemon-card-header">
+                <h3 class="pokemon-name">${name}</h3>
+                <span class="pokemon-id">#${id}</span>
+            </div>
+            <div class="pokemon-image">
+                ${pokemon.sprites.front_default
+                    ? `<img src="${pokemon.sprites.front_default}" alt="${pokemon.name}" loading="lazy" />`
+                    : '<span style="font-size: 0.75rem; color: #999;">—</span>'
+                }
+            </div>
+            <div class="pokemon-types">
+                ${typesHTML}
+            </div>
+        `;
+        
+        card.onclick = () => openModal(pokemon);
+        return card;
+    }
+
+    // ========== MODAL ==========
+    async function openModal(pokemon) {
+        state.selectedPokemon = pokemon;
+        const name = pokemon.name[0].toUpperCase() + pokemon.name.slice(1);
+        const id = String(pokemon.id).padStart(4, '0');
+        const types = pokemon.types.map(t => t.type.name);
+
+        const weaknesses = new Set();
+        types.forEach(t => {
+            (typeWeaknesses[t] || []).forEach(w => weaknesses.add(w));
+        });
+
+        document.getElementById('modalTitle').textContent = name;
+        document.getElementById('modalId').textContent = `#${id}`;
+        document.getElementById('modalImage').src = pokemon.sprites.front_default || '';
+        document.getElementById('modalImage').alt = pokemon.name;
+        document.getElementById('modalHeight').textContent = `${(pokemon.height / 10).toFixed(1)}m`;
+        document.getElementById('modalWeight').textContent = `${(pokemon.weight / 10).toFixed(1)}kg`;
+
+        const typesDiv = document.getElementById('modalTypes');
+        typesDiv.innerHTML = types.map(t => 
+            `<span class="type-badge type-${t}">${t}</span>`
+        ).join('');
+
+        const weakDiv = document.getElementById('modalWeaknesses');
+        weakDiv.innerHTML = Array.from(weaknesses).sort().map(w => 
+            `<span class="type-badge type-${w}">${w}</span>`
+        ).join('');
+
+        const statsOrder = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed'];
+        const sortedStats = [...pokemon.stats].sort((a, b) => 
+            statsOrder.indexOf(a.stat.name) - statsOrder.indexOf(b.stat.name)
+        );
+
+        const statsContent = document.getElementById('statsContent');
+        statsContent.innerHTML = sortedStats.map(s => `
+            <div class="stat-row">
+                <div class="stat-row-header">
+                    <span class="stat-row-name">${s.stat.name.replace('-', ' ')}</span>
+                    <span class="stat-row-value">${s.base_stat}</span>
+                </div>
+                <div class="stat-bar">
+                    <div class="stat-bar-fill" style="width: ${Math.min((s.base_stat / 150) * 100, 100)}%"></div>
+                </div>
+            </div>
+        `).join('');
+
+        const abilList = document.getElementById('abilitiesList');
+        abilList.innerHTML = pokemon.abilities.map(ab => `
+            <li class="ability-item">
+                <span>${ab.ability.name.replace('-', ' ')}</span>
+                ${ab.is_hidden ? '<span class="hidden-ability">Hidden</span>' : ''}
+            </li>
+        `).join('') || '<li class="ability-item">Nenhuma</li>';
+
+        document.getElementById('baseExp').textContent = pokemon.base_experience || '—';
+
+        // Carregar dados da espécie
+        const species = await fetchPokemonSpecies(pokemon.id);
+        if (species) {
+            document.getElementById('captureRate').textContent = `${species.capture_rate}%`;
+            
+            const genderRate = species.gender_rate;
+            if (genderRate === -1) {
+                document.getElementById('genderRate').textContent = 'Sem gênero';
+            } else {
+                const femaleRate = (genderRate * 12.5).toFixed(1);
+                const maleRate = (100 - (genderRate * 12.5)).toFixed(1);
+                document.getElementById('genderRate').textContent = `♂ ${maleRate}% / ♀ ${femaleRate}%`;
+            }
+            
+            document.getElementById('eggCycles').textContent = species.hatch_counter || '—';
+            document.getElementById('habitat').textContent = species.habitat?.name || '—';
+            
+            const eggGroupsDiv = document.getElementById('eggGroups');
+            eggGroupsDiv.innerHTML = (species.egg_groups || []).map(eg => 
+                `<span class="egg-badge">${eg.name}</span>`
+            ).join('') || '<span class="egg-badge">Nenhum</span>';
+        }
+
+        document.getElementById('modal').classList.add('show');
+    }
+
+    function closeModal() {
+        document.getElementById('modal').classList.remove('show');
+        state.selectedPokemon = null;
+    }
+
+    // ========== ERROR HANDLING ==========
+    function showError() {
+        document.getElementById('errorAlert').style.display = 'block';
+        const errorMsg = document.getElementById('errorMessage');
+        errorMsg.textContent = state.error;
+        
+        console.group('❌ ERRO DE CARREGAMENTO');
+        console.log('Mensagem:', state.error);
+        console.log('Geração:', state.filters.generation);
+        console.log('Pokémon em cache:', state.allPokemon.length);
+        console.groupEnd();
+    }
+
+    // ========== DARK MODE ==========
+    function initDarkMode() {
+        if (state.darkMode) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('darkModeToggle').textContent = '☀️';
+        }
+    }
+
+    function toggleDarkMode() {
+        state.darkMode = !state.darkMode;
+        if (state.darkMode) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('darkModeToggle').textContent = '☀️';
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.getElementById('darkModeToggle').textContent = '🌙';
+        }
+    }
+
+    // ========== EVENT LISTENERS ==========
+    document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        state.filters.search = e.target.value;
+        document.getElementById('clearSearchBtn').classList.toggle('hidden', !state.filters.search);
+        
+        clearTimeout(state.debounceTimer);
+        state.debounceTimer = setTimeout(() => applyFilters(), 300);
+    });
+
+    document.getElementById('clearSearchBtn').addEventListener('click', () => {
+        state.filters.search = '';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('clearSearchBtn').classList.add('hidden');
+        applyFilters();
+    });
+
+    document.getElementById('sortSelect').addEventListener('change', (e) => {
+        state.filters.sort = e.target.value;
+        applyFilters();
+    });
+
+    document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+        state.filters.type = null;
+        state.filters.search = '';
+        state.filters.sort = 'number-asc';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('sortSelect').value = 'number-asc';
+        document.getElementById('clearSearchBtn').classList.add('hidden');
+        renderTypeButtons();
+        applyFilters();
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        state.filters.type = null;
+        state.filters.search = '';
+        state.filters.sort = 'number-asc';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('sortSelect').value = 'number-asc';
+        document.getElementById('clearSearchBtn').classList.add('hidden');
+        renderTypeButtons();
+        applyFilters();
+    });
+
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    document.getElementById('modal').addEventListener('click', (e) => {
+        if (e.target.id === 'modal') closeModal();
+    });
+
+    document.getElementById('tabStats').addEventListener('click', () => {
+        document.getElementById('statsContent').classList.add('show');
+        document.getElementById('detailsContent').classList.remove('show');
+        document.getElementById('tabStats').classList.add('active');
+        document.getElementById('tabDetails').classList.remove('active');
+    });
+
+    document.getElementById('tabDetails').addEventListener('click', () => {
+        document.getElementById('statsContent').classList.remove('show');
+        document.getElementById('detailsContent').classList.add('show');
+        document.getElementById('tabStats').classList.remove('active');
+        document.getElementById('tabDetails').classList.add('active');
+    });
+
+    document.getElementById('retryBtn').addEventListener('click', loadCurrentGeneration);
+    
+    document.addEventListener('keydown', (e) => { 
+        if (e.key === 'Escape') closeModal(); 
+    });
+
+    setInterval(() => {
+        const hasFilters = state.filters.type || state.filters.search !== '' || state.filters.sort !== 'number-asc';
+        document.getElementById('clearFiltersBtn').classList.toggle('hidden', !hasFilters);
+    }, 100);
+
+    // ========== INIT ==========
+    initDarkMode();
+    renderGenerationButtons();
+    loadCurrentGeneration();
+</script>
+
+</body>
+</html>
